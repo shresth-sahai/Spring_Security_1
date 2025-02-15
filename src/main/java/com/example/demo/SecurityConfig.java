@@ -3,7 +3,6 @@ package com.example.demo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,19 +18,17 @@ public class SecurityConfig {
         http
                 // Authorizing HTTP requests with roles
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Only users with "ADMIN" role can access "/admin/**"
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // Users with "USER" or "ADMIN" role can access "/user/**"
-                        .requestMatchers("/public/**").permitAll() // No authentication required for "/public/**"
+                        .requestMatchers("/app/public/**").permitAll()  // Allow everyone to access "/app/public/**"
+                        .requestMatchers("/app/admin/**").hasRole("ADMIN") // Only users with "ADMIN" role can access "/app/admin/**"
+                        .requestMatchers("/app/user/**").hasAnyRole("USER", "ADMIN") // Users with "USER" or "ADMIN" role can access "/app/user/**"
                 )
-                // Customizing form login
-                .formLogin(form -> form
-                        .loginPage("/login") // Custom login page URL
-                        .permitAll() // Allows everyone to access the login page
-                )
-                // Customizing logout
+                // Enabling HTTP Basic authentication
+                .httpBasic()
+                .and()
+                // Customizing logout (optional, but if you need a logout URL)
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // Custom logout URL (default is /logout)
-                        .logoutSuccessUrl("/login?logout") // After logout, redirect to the login page with "logout" message
+                        .logoutUrl("/app/logout") // Custom logout URL
+                        .logoutSuccessUrl("/app/login?logout") // Redirect to login page after logout
                         .permitAll() // Allows everyone to access logout functionality
                 );
 
