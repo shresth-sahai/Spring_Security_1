@@ -1,5 +1,4 @@
 package com.example.demo;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
 
 @Configuration
 public class SecurityConfig {
@@ -39,6 +39,11 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         var user1 = User.withUsername("user")
                 .password(passwordEncoder().encode("password")) // Encodes password with BCrypt
+                .roles("USER") // Assign "USER" role
+                .build();
+
+        var user2 = User.withUsername("user1")
+                .password(passwordEncoder().encode("password1")) // Encodes password with BCrypt
                 .roles("USER") // Assign "USER" role
                 .build();
 
