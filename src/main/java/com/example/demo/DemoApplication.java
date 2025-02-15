@@ -11,3 +11,9 @@ public class DemoApplication {
 	}
 
 }
+/*
+basic auth -> Spring boot applies a basic auth -> username, password ->
+ end points -> /borrow -> use spring security
+ users / roles -> ADMIN USER MODERATOR etc
+
+ */
