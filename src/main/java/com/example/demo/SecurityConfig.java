@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .roles("ADMIN") // Assign "ADMIN" role
                 .build();
 
-        return new InMemoryUserDetailsManager(user1, admin); // Creates in-memory user details manager with the two users
+        return new InMemoryUserDetailsManager(user1, admin,user2); // Creates in-memory user details manager with the two users
     }
 
     @Bean
