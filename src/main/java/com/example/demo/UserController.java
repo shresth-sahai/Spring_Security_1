@@ -5,33 +5,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/app")
 public class UserController {
-    // public endpoint, no auth req
+
+    // Public endpoint, no authentication required
     @GetMapping("/public/hello")
-    public String publicHello(){
-        return "publicHello"; // view
+    public String publicHello() {
+        return "publicHello"; // Returns a view (publicHello.html)
     }
-    // user only
+
+    // User-only accessible endpoint
     @GetMapping("/user/hello")
-    public String userHello(){
-        return "userHello";
+    public String userHello() {
+        return "userHello"; // Returns a view (userHello.html)
     }
-// admin only
+
+    // Admin-only accessible endpoint
     @GetMapping("/admin/hello")
-    public String adminHello(){
-        return "adminHello";
+    public String adminHello() {
+        return "adminHello"; // Returns a view (adminHello.html)
     }
-    // custom
+
+    // Custom login page
     @GetMapping("/login")
-    public String login(){
-        return "login";
+    public String login() {
+        return "login"; // Returns the login view (login.html)
     }
-    // custom logout
+
+    // Logout endpoint (handled automatically by Spring Security)
     @GetMapping("/logout")
-    public String logout(){
-        return "logout";
+    public String logout() {
+        return "logout"; // Redirects to the login page after logout (handled by Spring Security)
     }
-
-
-
-
 }
