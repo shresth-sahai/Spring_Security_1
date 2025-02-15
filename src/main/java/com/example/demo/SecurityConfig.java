@@ -12,7 +12,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
@@ -20,23 +19,20 @@ public class SecurityConfig {
         http
                 // Authorizing HTTP requests with roles
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Only users with "ADMIN" role can access "/admin/**"
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // Users with "USER" or "ADMIN" role can access "/user/**"
+                        .requestMatchers("/public/**").permitAll() // No authentication required for "/public/**"
                 )
-                .and()
-
                 // Customizing form login
                 .formLogin(form -> form
                         .loginPage("/login") // Custom login page URL
-                        .permitAll() // Allow everyone to access the login page
+                        .permitAll() // Allows everyone to access the login page
                 )
-
                 // Customizing logout
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // Custom logout URL
-                        .logoutSuccessUrl("/login?logout") // Redirect after logout
-                        .permitAll() // Allow everyone to logout
+                        .logoutUrl("/logout") // Custom logout URL (default is /logout)
+                        .logoutSuccessUrl("/login?logout") // After logout, redirect to the login page with "logout" message
+                        .permitAll() // Allows everyone to access logout functionality
                 );
 
         return http.build();
@@ -45,20 +41,20 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         var user1 = User.withUsername("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
+                .password(passwordEncoder().encode("password")) // Encodes password with BCrypt
+                .roles("USER") // Assign "USER" role
                 .build();
 
         var admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("adminpassword"))
-                .roles("ADMIN")
+                .password(passwordEncoder().encode("adminpassword")) // Encodes password with BCrypt
+                .roles("ADMIN") // Assign "ADMIN" role
                 .build();
 
-        return new InMemoryUserDetailsManager(user1, admin);
+        return new InMemoryUserDetailsManager(user1, admin); // Creates in-memory user details manager with the two users
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // BCrypt is a secure and widely-used password encoder
     }
 }
